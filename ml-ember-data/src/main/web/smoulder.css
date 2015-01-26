@@ -1,0 +1,29 @@
+body {
+    font-family: Arial, Helvetice, sans-serif;
+    font-size: 12pt;
+}
+
+.person-row div {
+    display: inline-block;
+}
+
+.person-row .person-id {
+    width: 20em;
+}
+
+.person-row .person-name {
+    width: 20em;
+}
+
+.person-row .person-age {
+    width: 5em;
+}
+
+.person-row .person-delete {
+    width: 7em;
+}
+
+.person-row .person-edit {
+    width: 6em;
+}
+
