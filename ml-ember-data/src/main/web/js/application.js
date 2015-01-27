@@ -6,6 +6,10 @@
         LOG_TRANSITIONS_INTERNAL: true
     });
 
-    Smoulder.ApplicationAdapter = DS.FixtureAdapter.extend();
+    // Smoulder.ApplicationAdapter = DS.FixtureAdapter.extend();
+
+    Smoulder.ApplicationAdapter = DS.RESTAdapter.extend({
+        namespace: 'smoulder/v1'
+    });
 
 }());

@@ -8,7 +8,7 @@ import module namespace c = "http://marklogic.com/smoulder/lib/common" at "/xque
 declare namespace jb = "http://marklogic.com/xdmp/json/basic";
 
 declare function local:create($obj) {
-    let $new-id := sem:uuid-string()
+    let $new-id := c:uuid-string()
     let $obj := c:set-id($obj, $new-id)
     let $type := fn:local-name($obj)
     let $_ := xdmp:document-insert(
@@ -18,15 +18,18 @@ declare function local:create($obj) {
         ($type)
     )
 
-    return $obj
+    return element { fn:QName("http://marklogic.com/xdmp/json/basic", "json") } {
+        attribute type { "object" },
+        $obj
+    }
 };
-
-let $_ := xdmp:log("++++++++++++ CREATE")
 
 let $in-json := xdmp:get-request-body("text")/node()
 let $raw := json:transform-from-json($in-json)
 let $obj := $raw/*[@type="object"][1]
 let $created-obj := local:create($obj)
+
+
 
 return (
     xdmp:set-response-content-type("application/json"),
