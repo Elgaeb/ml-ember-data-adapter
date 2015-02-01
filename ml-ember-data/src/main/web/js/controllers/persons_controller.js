@@ -4,36 +4,33 @@
     Smoulder.PersonsController = Ember.ArrayController.extend({
         actions: {
             createNewPerson: function() {
-                var name = this.get("newName");
-                if (!name.trim()) return;
-
-                var age = parseInt(this.get("newAge"));
-                if(age < 1) return;
-
-                var person = this.store.createRecord('person', {
-                    name: name,
-                    age: age
-                });
-
-                this.set("newName", "");
-                this.set("newAge", "");
-
-                person.save();
+                this.transitionTo('person.create');
             }
         }
     });
 
-    Smoulder.PersonController = Ember.ObjectController.extend({
+    Smoulder.PersonCreateController = Ember.ObjectController.extend({
+        actions: {
+            save: function() {
+                var person = this.store.createRecord('person', this.get('model'));
+                person.save();
+                this.transitionTo('persons')
+            }
+        }
+    });
+
+
+    Smoulder.PersonEditController = Ember.ObjectController.extend({
         actions: {
             deletePerson: function() {
-                var person = this.get('model')
+                var person = this.get('model');
                 person.deleteRecord();
                 person.save();
             },
             save: function() {
-                console.log('save', this.get('model.name'), this.get('model.age'));
                 var person = this.get('model');
                 person.save();
+                this.transitionTo('persons');
             }
 
         }

@@ -6,12 +6,4 @@
         age: DS.attr('number')
     });
 
-    Smoulder.Person.FIXTURES = [
-        {
-            id: 1,
-            name: "Chris",
-            age: 38
-        }
-    ];
-
 }());

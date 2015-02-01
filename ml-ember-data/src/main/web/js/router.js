@@ -3,19 +3,12 @@
 
     Smoulder.Router.map(function () {
         this.resource('persons', function() {
-            this.route('new');
-            this.route('edit');
         });
 
-        this.resource(
-            'person',
-            {
-                path: '/person/:id'
-            },
-            function() {
-
-            }
-        );
+        this.resource('person', function() {
+            this.route('edit', { path: ':id' });
+            this.route('create');
+        });
     });
 
     Smoulder.IndexRoute = Ember.Route.extend({
@@ -30,7 +23,16 @@
         }
     });
 
+    Smoulder.PersonCreateRoute = Ember.Route.extend({
+        model: function() {
+            return Ember.Object.create({});
+        }
+    });
+
     Smoulder.PersonRoute = Ember.Route.extend({
+    });
+
+    Smoulder.PersonEditRoute = Ember.Route.extend({
         model: function(params) {
             return this.store.find('person', params.id);
         }
