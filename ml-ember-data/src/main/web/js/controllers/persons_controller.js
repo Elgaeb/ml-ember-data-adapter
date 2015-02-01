@@ -30,8 +30,10 @@
                 person.deleteRecord();
                 person.save();
             },
-            editPerson: function() {
-                console.log("edit", this);
+            save: function() {
+                console.log('save', this.get('model.name'), this.get('model.age'));
+                var person = this.get('model');
+                person.save();
             }
 
         }

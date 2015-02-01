@@ -1,6 +1,7 @@
 body {
     font-family: Arial, Helvetice, sans-serif;
     font-size: 12pt;
+    padding-top: 70px;
 }
 
 .person-row div {

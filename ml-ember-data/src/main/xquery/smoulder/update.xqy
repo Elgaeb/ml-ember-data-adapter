@@ -15,7 +15,10 @@ declare function local:update($obj, $id) {
     let $old := fn:doc($uri)
     let $_ := xdmp:node-replace($old/node(), $obj)
 
-    return $obj
+    return element { fn:QName("http://marklogic.com/xdmp/json/basic", "json") } {
+        attribute type { "object" },
+        $obj
+    }
 };
 
 let $request := $requests:options/rest:request[@endpoint="/xquery/smoulder/update.xqy"][1]
