@@ -1,0 +1,45 @@
+#editPost-body, #newPost-body {
+    width: 100%;
+    height: 20em;
+}
+
+.blog-post {
+    border: 1px solid lightgrey;
+    margin: 1em 0;
+    padding: 1em;
+    border-radius: 5px;
+    box-shadow: .2em .2em .5em rgba(0,0,0,0.25);
+}
+
+.blog-post > .blog-post-subject {
+    font-weight: bold;
+    font-size: 120%;
+
+}
+
+.blog-post > .blog-post-body {
+
+}
+
+.blog-post > .blog-post-subinfo {
+    text-align: right;
+    border-top: 1px solid lightgrey;
+    margin-top: 5px;
+    padding-top: 5px;
+
+    color: grey;
+    font-style: italic;
+}
+
+.blog-post > .blog-post-subinfo > .blog-post-admin {
+    display: inline-block;
+}
+
+.blog-post > .blog-post-subinfo > .blog-post-author {
+    display: inline-block;
+}
+
+.blog-post > .blog-post-subinfo > .blog-post-date {
+    display: inline-block;
+}
+

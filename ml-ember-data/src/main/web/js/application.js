@@ -54,4 +54,10 @@
         }
     });
 
+    Ember.Handlebars.helper('date', function(value, options) {
+        var format = options.hash.format || undefined;
+        var m = moment(value);
+        return new Ember.Handlebars.SafeString(m.format(format));
+    });
+
 }());
