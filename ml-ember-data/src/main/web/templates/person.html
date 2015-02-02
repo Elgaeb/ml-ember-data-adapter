@@ -1,0 +1,107 @@
+
+<script type="text/x-handlebars" data-template-name="persons">
+
+    <h2>Current People</h2>
+
+    <table class="table table-striped">
+
+        <thead>
+        <td>ID</td>
+        <td>Name</td>
+        <td>Age</td>
+        <td></td>
+        </thead>
+
+        <tbody>
+        {{#each person in model itemController="personEdit"}}
+        <tr>
+            <td>{{#link-to 'person.edit' person}}{{person.id}}{{/link-to}}</td>
+            <td>{{#link-to 'person.edit' person}}{{person.name}}{{/link-to}}</td>
+            <td>{{person.age}}</td>
+            <td><a href="#" {{action deletePerson}}><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>
+        </tr>
+        {{/each}}
+        </tbody>
+
+    </table>
+
+    <button {{action createNewPerson}}>New Person</button>
+</script>
+
+<script type="text/x-handlebars" data-template-name="person/edit">
+
+    <ol class="breadcrumb">
+        <li>{{#link-to 'persons'}}People{{/link-to}}</li>
+        <li class="active">{{name}}</li>
+    </ol>
+
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="editPerson-name" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+                {{input
+                type="text"
+                id="editPerson-name"
+                placeholder="Name"
+                value=model.name
+                }}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="editPerson-age" class="col-sm-2 control-label">Age</label>
+            <div class="col-sm-10">
+                {{input
+                type="number"
+                id="editPerson-age"
+                placeholder="Age"
+                value=model.age
+                }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button class="btn btn-default" {{action save}}>Save</button>
+            </div>
+        </div>
+    </form>
+</script>
+
+<script type="text/x-handlebars" data-template-name="person/create">
+
+    <ol class="breadcrumb">
+        <li>{{#link-to 'persons'}}People{{/link-to}}</li>
+        <li class="active">New Person</li>
+    </ol>
+
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="newPerson-name" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+                {{input
+                type="text"
+                id="newPerson-name"
+                placeholder="Name"
+                value=name
+                }}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="newPerson-age" class="col-sm-2 control-label">Age</label>
+            <div class="col-sm-10">
+                {{input
+                type="number"
+                id="newPerson-age"
+                placeholder="Age"
+                value=age
+                }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button class="btn btn-default" {{action save}}>Save</button>
+            </div>
+        </div>
+    </form>
+</script>

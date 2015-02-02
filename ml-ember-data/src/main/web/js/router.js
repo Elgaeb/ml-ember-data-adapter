@@ -17,25 +17,28 @@
         }
     });
 
-    Smoulder.PersonsRoute = Ember.Route.extend({
+    Smoulder.PersonsRoute = Smoulder.LazyRoute.extend({
         model: function() {
             return this.store.find('person');
-        }
-    });
-
-    Smoulder.PersonCreateRoute = Ember.Route.extend({
-        model: function() {
-            return Ember.Object.create({});
-        }
+        },
+        templateUrl: '/templates/person.html'
     });
 
     Smoulder.PersonRoute = Ember.Route.extend({
     });
 
-    Smoulder.PersonEditRoute = Ember.Route.extend({
+    Smoulder.PersonCreateRoute = Smoulder.LazyRoute.extend({
+        model: function() {
+            return Ember.Object.create({});
+        },
+        templateUrl: '/templates/person.html'
+    });
+
+    Smoulder.PersonEditRoute = Smoulder.LazyRoute.extend({
         model: function(params) {
             return this.store.find('person', params.id);
-        }
+        },
+        templateUrl: '/templates/person.html'
     });
 
 }());
