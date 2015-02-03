@@ -13,7 +13,6 @@
         actions: {
             save: function() {
                 var post = this.store.createRecord('post', this.get('model'));
-                post.set('date', new Date());
                 post.save();
                 this.transitionTo('posts')
             }
@@ -32,6 +31,17 @@
                 var post = this.get('model');
                 post.save();
                 this.transitionTo('posts');
+            },
+            saveComment: function() {
+                var post = this.get('model');
+                var comment = this.store.createRecord('comment', {
+                    body: this.get('newComment'),
+                    post: this.get('model')
+                });
+                post.get('comments').addObject(comment);
+                comment.save().then(function() {
+                    post.save();
+                });
             }
 
         }

@@ -1,6 +1,6 @@
 
 
-<h2>foo2</h2>
+<h2>foo34</h2>
 
 <script type="text/x-handlebars" data-template-name="posts">
 
@@ -8,9 +8,10 @@
 
     {{#each post in model itemController="postEdit"}}
     <div class="blog-post">
-        <div class="blog-post-subject">{{post.subject}}</div>
+        <div class="blog-post-subject">{{#link-to 'post.edit' post}}{{post.subject}}{{/link-to}}</div>
         <div class="blog-post-body">{{post.body}}</div>
         <div class="blog-post-subinfo">
+            <div style="float: left;">{{post.comments.length}} comments</div>
             <div class="blog-post-author">Posted by <b>{{post.author}}</b></div>
             <div class="blog-post-date">on {{date post.date format="MMM Do, YYYY [at] h:mm a "}}</div>
             <div class="blog-post-admin">
@@ -36,10 +37,11 @@
             <label for="editPost-subject" class="col-sm-2 control-label">Subject</label>
             <div class="col-sm-10">
                 {{input
-                type="text"
-                id="editPost-subject"
-                placeholder="Subject"
-                value=subject
+                    class="form-control"
+                    type="text"
+                    id="editPost-subject"
+                    placeholder="Subject"
+                    value=subject
                 }}
             </div>
         </div>
@@ -48,6 +50,7 @@
             <div class="col-sm-10">
 
                 {{textarea
+                    class="form-control"
                     id="editPost-body"
                     placeholder="..."
                     spellcheck="true"
@@ -60,6 +63,26 @@
             <div class="col-sm-offset-2 col-sm-10">
                 <button class="btn btn-default" {{action save}}>Save</button>
             </div>
+        </div>
+    </form>
+
+    {{#each comment in model.comments}}
+        {{comment.body}}
+    {{/each}}
+
+    <form>
+        <div class="form-group">
+            <label for="newComment">Add a Comment</label>
+            {{textarea
+                class="form-control"
+                id="newComment"
+                placeholder="..."
+                spellcheck="true"
+                value=controller.newComment
+            }}
+        </div>
+        <div class="form-group">
+            <button class="btn btn-default" {{action saveComment}}>Save Comment</button>
         </div>
     </form>
 </script>
@@ -76,10 +99,11 @@
             <label for="newPost-author" class="col-sm-2 control-label">Author</label>
             <div class="col-sm-10">
                 {{input
-                type="text"
-                id="newPost-author"
-                placeholder="Author"
-                value=author
+                    class="form-control"
+                    type="text"
+                    id="newPost-author"
+                    placeholder="Author"
+                    value=author
                 }}
             </div>
         </div>
@@ -87,10 +111,11 @@
             <label for="newPost-subject" class="col-sm-2 control-label">Subject</label>
             <div class="col-sm-10">
                 {{input
-                type="text"
-                id="newPost-subject"
-                placeholder="Subject"
-                value=subject
+                    class="form-control"
+                    type="text"
+                    id="newPost-subject"
+                    placeholder="Subject"
+                    value=subject
                 }}
             </div>
         </div>
@@ -98,6 +123,7 @@
             <label for="newPost-body" class="col-sm-2 control-label">Body</label>
             <div class="col-sm-10">
                 {{textarea
+                    class="form-control"
                     id="newPost-body"
                     placeholder="..."
                     spellcheck="true"

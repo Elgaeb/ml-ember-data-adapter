@@ -3,12 +3,23 @@
 
     window.Smoulder = Ember.Application.create({
         //LOG_TRANSITIONS: true,
-        //LOG_TRANSITIONS_INTERNAL: true
+        //LOG_TRANSITIONS_INTERNAL: true,
+        DISABLE_LAZY_ROUTE_CACHING: true
     });
 
     Smoulder.ApplicationAdapter = DS.RESTAdapter.extend({
         namespace: 'smoulder/v1'
     });
+
+    /*
+     * http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+     */
+    Smoulder.uuid = function() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+            return v.toString(16);
+        });
+    };
 
     Smoulder.loadTemplates = (function() {
 
@@ -19,7 +30,16 @@
                 if(loadedTemplateUrls[url] != null) {
                     resolve();
                 } else {
-                    var jqXHR = $.get(url);
+
+                    var data = (function() {
+                        if (Smoulder.DISABLE_LAZY_ROUTE_CACHING) {
+                            return {
+                                "_dc": Smoulder.uuid()
+                            }
+                        } else return undefined
+                    }());
+
+                    var jqXHR = $.get(url, data);
 
                     jqXHR.done(function(data, textStatus, jqXHR) {
                         $(data).filter('script[type="text/x-handlebars"]').each(function () {
