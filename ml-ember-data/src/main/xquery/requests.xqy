@@ -10,6 +10,10 @@ declare variable $regex-with-id := "^/smoulder/v1/(\w+)/([a-fA-F0-9\-]+)/?$";
 declare variable $requests:options as element(rest:options) :=
     <options xmlns="http://marklogic.com/appservices/rest">
 
+        <request uri="[.]less$" endpoint="/js/lesscm.xqy">
+            <http method="GET"/>
+        </request>
+
         <request uri="{$regex-with-id}" endpoint="/xquery/smoulder/get.xqy">
             <uri-param name="type">$1</uri-param>
             <uri-param name="id">$2</uri-param>

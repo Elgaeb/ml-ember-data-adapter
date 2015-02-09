@@ -2,9 +2,13 @@ xquery version "1.0-ml";
 
 module namespace c = "http://marklogic.com/smoulder/lib/common";
 
+declare namespace dir = "http://marklogic.com/xdmp/directory";
+
 declare namespace sm = "http://marklogic.com/smoulder";
 
-declare variable $config := fn:doc("/admin/configuration.xml");
+declare variable $CONFIG := fn:doc("/admin/configuration.xml");
+declare variable $MODULES_ROOT := xdmp:modules-root();
+declare variable $PATH_SEPARATOR := fn:substring($MODULES_ROOT, fn:string-length($MODULES_ROOT));
 
 declare function c:remove-outer-type($obj) {
     element { fn:QName(fn:namespace-uri($obj), "json") } {
@@ -14,7 +18,7 @@ declare function c:remove-outer-type($obj) {
 };
 
 declare function c:type-from-plural($type-plural as xs:string) as xs:string {
-    let $type := $config//sm:plural[@plural=$type-plural]/@singular
+    let $type := $CONFIG//sm:plural[@plural=$type-plural]/@singular
     let $type := if (fn:exists($type))
         then $type
         else fn:substring($type-plural, 1, fn:string-length($type-plural) - 1)
@@ -47,6 +51,34 @@ declare private function c:build-path($remaining as xs:string*) as xs:string* {
     c:build-path($remaining[. != "." and . != ""], ())
 };
 
+declare function c:normalize-path($uri as xs:string) as xs:string {
+    let $path-parts := c:build-path(fn:tokenize($uri, "[/\\]"))
+    let $normalized :=  fn:string-join($path-parts, $PATH_SEPARATOR)
+    return if (fn:matches($uri, "^[/\\]"))
+        then fn:concat($PATH_SEPARATOR, $normalized)
+        else $normalized
+};
+
+declare function c:normalize-parent-path($uri as xs:string) as xs:string* {
+    let $path-parts := c:build-path(fn:tokenize($uri, "[/\\]"))
+    let $normalized :=  fn:string-join($path-parts[fn:position() < fn:last()], $PATH_SEPARATOR)
+    return if (fn:matches($uri, "^[/\\]"))
+        then (fn:concat($PATH_SEPARATOR, $normalized), $path-parts[fn:last()])
+        else ($normalized, $path-parts[fn:last()])
+};
+
+declare function c:module-last-modified($uri as xs:string) as xs:dateTime {
+    let $mr := xdmp:modules-root()
+    let $pp := c:normalize-parent-path(fn:concat($mr, $uri))
+    let $dir := xdmp:filesystem-directory($pp[1])
+
+    return xs:dateTime($dir//dir:entry[dir:filename = $pp[2]]/dir:last-modified)
+};
+
+declare function c:module-latest-modified($uri as xs:string*) as xs:dateTime {
+    fn:max(c:module-last-modified($uri))
+};
+
 declare function c:module-doc($uri as xs:string) {
     let $md := xdmp:modules-database()
     return if ($md != 0) then
@@ -57,10 +89,8 @@ declare function c:module-doc($uri as xs:string) {
             </options>
         )
     else
-        let $mr := xdmp:modules-root()
         let $path-parts := c:build-path(fn:tokenize($uri, "[/\\]"))
-        let $filesep := fn:substring($mr, fn:string-length($mr))
-        let $file-path := fn:concat($mr, fn:string-join($path-parts, $filesep))
+        let $file-path := fn:concat($MODULES_ROOT, fn:string-join($path-parts, $PATH_SEPARATOR))
         return if (xdmp:filesystem-file-exists($file-path)) then
             xdmp:filesystem-file($file-path)
         else

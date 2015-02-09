@@ -38,7 +38,6 @@
                     body: this.get('newComment'),
                     post: this.get('model')
                 });
-                post.get('comments').addObject(comment);
                 comment.save().then(function() {
                     post.save();
                 });

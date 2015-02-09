@@ -9,7 +9,7 @@
     {{#each post in model itemController="postEdit"}}
     <div class="blog-post">
         <div class="blog-post-subject">{{#link-to 'post.edit' post}}{{post.subject}}{{/link-to}}</div>
-        <div class="blog-post-body">{{post.body}}</div>
+        <pre class="blog-post-body">{{post.body}}</pre>
         <div class="blog-post-subinfo">
             <div style="float: left;">{{post.comments.length}} comments</div>
             <div class="blog-post-author">Posted by <b>{{post.author}}</b></div>
