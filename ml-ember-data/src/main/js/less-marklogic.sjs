@@ -1,5 +1,5 @@
 /*!
- * Less - Leaner CSS v2.3.1
+ * Less - Leaner CSS v2.4.0
  * http://lesscss.org
  *
  * Copyright (c) 2009-2015, Alexis Sellier <self@cloudhead.net>
@@ -12,7 +12,8 @@
 
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.less=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var less = module.exports = require('../less');
-},{"../less":21}],2:[function(require,module,exports){
+module.exports.Promise = require('promise')
+},{"../less":21,"promise":81}],2:[function(require,module,exports){
 var contexts = {};
 module.exports = contexts;
 
@@ -1279,6 +1280,19 @@ var isa = function (n, Type) {
             throw { type: "Argument", message: "Second argument to isunit should be a unit or a string." };
         }
         return (n instanceof Dimension) && n.unit.is(unit) ? Keyword.True : Keyword.False;
+    },
+    getItemsFromNode = function(node) {
+        // handle non-array values as an array of length 1
+        // return 'undefined' if index is invalid
+        var items = Array.isArray(node.value) ?
+            node.value : Array(node);
+
+        return items.filter(function(item) {
+            if (item.type === "Comment") {
+                return false;
+            }
+            return true;
+        });
     };
 functionRegistry.addMultiple({
     isruleset: function (n) {
@@ -1331,14 +1345,11 @@ functionRegistry.addMultiple({
     },
     extract: function(values, index) {
         index = index.value - 1; // (1-based index)
-        // handle non-array values as an array of length 1
-        // return 'undefined' if index is invalid
-        return Array.isArray(values.value) ?
-            values.value[index] : Array(values)[index];
+
+        return getItemsFromNode(values)[index];
     },
     length: function(values) {
-        var n = Array.isArray(values.value) ? values.value.length : 1;
-        return new Dimension(n);
+        return new Dimension(getItemsFromNode(values).length);
     }
 });
 
@@ -1475,7 +1486,7 @@ module.exports = function(environment, fileManagers) {
     var SourceMapOutput, SourceMapBuilder, ParseTree, ImportManager, Environment;
 
     var less = {
-        version: [2, 3, 1],
+        version: [2, 4, 0],
         data: require('./data'),
         tree: require('./tree'),
         Environment: (Environment = require("./environment/environment")),

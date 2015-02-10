@@ -19,7 +19,6 @@ let $uri := if (fn:contains($uri, "?", "http://marklogic.com/collation/"))
 
 
 return (
-    xdmp:set-response-content-type("text/plain"),
     xdmp:invoke(
             "/js/less-invoke.sjs",
             (xs:QName("uri"), $uri)

@@ -7,5 +7,5 @@ lessc(uri, function(out) {
     output = out;
 });
 
-xdmp.setResponseContentType("text/plain");
+xdmp.setResponseContentType("text/css");
 output.css;
