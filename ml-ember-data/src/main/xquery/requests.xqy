@@ -10,7 +10,7 @@ declare variable $regex-with-id := "^/smoulder/v1/(\w+)/([a-fA-F0-9\-]+)/?$";
 declare variable $requests:options as element(rest:options) :=
     <options xmlns="http://marklogic.com/appservices/rest">
 
-        <request uri="[.]less$" endpoint="/js/lesscm.xqy">
+        <request uri="[.]less$" endpoint="/js/lc.sjs">
             <http method="GET"/>
         </request>
 
@@ -41,4 +41,15 @@ declare variable $requests:options as element(rest:options) :=
             <uri-param name="id">$2</uri-param>
             <http method="DELETE"/>
         </request>
+
+        <request uri="{$regex-with-id}" endpoint="/qconsole.xqy">
+            <param name="action"/>
+            <param name="sid"/>
+            <param name="qid"/>
+            <param name="crid"/>
+            <param name="querytype"/>
+            <param name="cache"/>
+            <http method="POST"/>
+        </request>
+
     </options>;
