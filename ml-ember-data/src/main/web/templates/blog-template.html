@@ -15,14 +15,14 @@
             <div class="blog-post-author">Posted by <b>{{post.author}}</b></div>
             <div class="blog-post-date">on {{date post.date format="MMM Do, YYYY [at] h:mm a "}}</div>
             <div class="blog-post-admin">
-                <a href="#" {{action deletePost}}><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+                <a href="#" {{action "deletePost"}}><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
                 {{#link-to 'post.edit' post}}<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>{{/link-to}}
             </div>
         </div>
     </div>
     {{/each}}
 
-    <button {{action createNewPost}}>New Post</button>
+    <button {{action "createNewPost"}}>New Post</button>
 </script>
 
 <script type="text/x-handlebars" data-template-name="post/edit">
@@ -61,7 +61,7 @@
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button class="btn btn-default" {{action save}}>Save</button>
+                <button class="btn btn-default" {{action "save"}}>Save</button>
             </div>
         </div>
     </form>
@@ -82,7 +82,7 @@
             }}
         </div>
         <div class="form-group">
-            <button class="btn btn-default" {{action saveComment}}>Save Comment</button>
+            <button class="btn btn-default" {{action "saveComment"}}>Save Comment</button>
         </div>
     </form>
 </script>
@@ -134,7 +134,7 @@
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button class="btn btn-default" {{action save}}>Save</button>
+                <button class="btn btn-default" {{action "save"}}>Save</button>
             </div>
         </div>
     </form>

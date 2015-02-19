@@ -4,7 +4,7 @@
     Smoulder.PostsController = Ember.ArrayController.extend({
         actions: {
             createNewPost: function() {
-                this.transitionTo('post.create');
+                this.transitionToRoute('post.create');
             }
         }
     });
@@ -12,9 +12,13 @@
     Smoulder.PostCreateController = Ember.ObjectController.extend({
         actions: {
             save: function() {
-                var post = this.store.createRecord('post', this.get('model'));
+                var post = this.store.createRecord('post', {
+                    author: this.get('model.author'),
+                    subject: this.get('model.subject'),
+                    body: this.get('model.body')
+                });
                 post.save();
-                this.transitionTo('posts')
+                this.transitionToRoute('posts')
             }
         }
     });
