@@ -32,23 +32,28 @@ module.exports = (function() {
     };
 
 
-    return function(uri, success, failure) {
+    return function(uri) {
 
         var path = abstractFileManager.getPath(uri);
         var fm = new MarkLogicFileManager(path);
         var less = lessFactory(environment, [fm]);
 
         var lf = "" + c.moduleDoc(uri);
-        less.render(lf, {}, function(error, out) {
 
-            if(error) {
-                if(failure) {
-                    failure(error);
-                }
-            } else {
-                success(out);
-            }
+        var error = null, output = null;
+
+        // this is normally bad form, but less, in their documentation,
+        // guarantees this to be synchronous
+        less.render(lf, {}, function(err, out) {
+            error = err;
+            output = out;
         });
+
+        if(error != null) {
+            fn.error(xs.QName("LESS-ERROR"), error.toString(), [ error ]);
+        }
+
+        return output;
 
     };
 }());
