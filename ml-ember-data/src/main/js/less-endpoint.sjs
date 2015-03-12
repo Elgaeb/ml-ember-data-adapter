@@ -19,25 +19,26 @@ function getCss() {
     var filepath = "/web" + /[^?]*/.exec(xdmp.getOriginalUrl())[0];
     var uri = "less:" + filepath;
 
-    var existingDoc = cts.doc(uri);
-    if(existingDoc != null) {
-        existingDoc = JSON.parse(existingDoc);
+    try {
+        var existingDoc = cts.doc(uri);
+        if (existingDoc != null) {
+            existingDoc = JSON.parse(existingDoc);
 
-        existingDoc.imports.push(filepath);
+            existingDoc.imports.push(filepath);
 
-        var lastModified = new Date(c.moduleLatestModified(existingDoc.imports));
-        var stampedTime = new Date(existingDoc.timestamp);
+            var lastModified = new Date(c.moduleLatestModified(existingDoc.imports));
+            var stampedTime = new Date(existingDoc.timestamp);
 
-        if(stampedTime >= lastModified) {
-            return existingDoc.css;
+            if (stampedTime >= lastModified) {
+                return existingDoc.css;
+            }
         }
+    } catch(ex) {
+        // assume there was a problem with the existing document, so regenerate it.
     }
 
     var output = null;
-    lessc(filepath, function(out) {
-        output = out;
-        output.timestamp = new Date();
-    });
+    output = lessc(filepath);
 
     if(output != null) {
         xdmp.documentInsert(
