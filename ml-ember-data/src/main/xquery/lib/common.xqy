@@ -3,8 +3,8 @@ xquery version "1.0-ml";
 module namespace c = "http://marklogic.com/smoulder/lib/common";
 
 declare namespace dir = "http://marklogic.com/xdmp/directory";
-
 declare namespace sm = "http://marklogic.com/smoulder";
+declare namespace var = 'http://marklogic.com/vars';
 
 declare variable $CONFIG := fn:doc("/admin/configuration.xml");
 declare variable $MODULES_ROOT := xdmp:modules-root();
@@ -67,7 +67,32 @@ declare function c:normalize-parent-path($uri as xs:string) as xs:string* {
         else ($normalized, $path-parts[fn:last()])
 };
 
-declare function c:module-last-modified($uri as xs:string) as xs:dateTime {
+declare function c:explode($mr as xs:string, $uri as xs:string?) {
+    let $mr-len := fn:string-length($mr)
+    let $pp := c:normalize-path(fn:concat($mr, $uri))
+
+    let $res := xdmp:filesystem-directory($pp)
+
+    let $files := (
+        for $f in $res/dir:entry[dir:type = 'directory']
+        let $filename := fn:string($f/dir:pathname)
+        let $uri := fn:substring($filename, $mr-len)
+        return c:explode($mr, $uri),
+
+        for $f in $res/dir:entry[dir:type = 'file']
+        let $filename := fn:string($f/dir:pathname)
+        let $uri := fn:substring($filename, $mr-len)
+        return
+            <file>
+                <filename>{$filename}</filename>
+                <uri>{$uri}</uri>
+            </file>
+    )
+
+    return $files
+};
+
+declare private function c:module-last-modified($uri as xs:string) as xs:dateTime {
     let $mr := xdmp:modules-root()
     let $pp := c:normalize-parent-path(fn:concat($mr, $uri))
     let $dir := xdmp:filesystem-directory($pp[1])
@@ -76,7 +101,24 @@ declare function c:module-last-modified($uri as xs:string) as xs:dateTime {
 };
 
 declare function c:module-latest-modified($uri as xs:string*) as xs:dateTime {
-    fn:max(c:module-last-modified($uri))
+    let $md := xdmp:modules-database()
+    return if ($md != 0) then
+        xdmp:eval("
+            xquery version '1.0-ml';
+            declare namespace var = 'http://marklogic.com/vars';
+            declare namespace prop = 'http://marklogic.com/xdmp/property';
+            declare variable $var:uri as xs:string* external;
+            fn:max(xdmp:document-properties($var:uri)//prop:last-modified/xs:dateTime(.))
+            ",
+            map:new((
+                map:entry(xdmp:key-from-QName(xs:QName("var:uri")), $uri)
+            )),
+            <options xmlns="xdmp:eval">
+                <database>{$md}</database>
+            </options>
+        )
+    else
+        fn:max(c:module-last-modified($uri))
 };
 
 declare function c:module-doc($uri as xs:string) {
