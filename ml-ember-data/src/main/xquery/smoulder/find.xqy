@@ -10,11 +10,21 @@ declare namespace jb = "http://marklogic.com/xdmp/json/basic";
 
 declare function local:get-all($type-plural as xs:string) {
     let $type := c:type-from-plural($type-plural)
+
+    let $docs := cts:search(/,
+            cts:collection-query($type),
+            (
+                "unfiltered",
+                cts:document-order()
+            )
+
+    )
+
     return element { fn:QName("http://marklogic.com/xdmp/json/basic", "json") } {
         attribute type { "object" },
         element { fn:QName("http://marklogic.com/xdmp/json/basic", $type-plural) } {
             attribute type { "array" },
-            fn:collection($type)/*/c:remove-outer-type(.)
+            $docs/element()/c:remove-outer-type(.)
         }
     }
 };

@@ -4,6 +4,18 @@ body {
 
 }
 
+button.btn.btn-primary {
+  @content: "New Post";
+  @size: 20em;
+
+  margin: 0 0 0 calc(~"100% -" @size);
+  width: @size;
+
+  &:after {
+    content: 'New Post'
+  }
+}
+
 #editPost-body, #newPost-body {
   height: 20em;
 }
@@ -13,12 +25,12 @@ body {
   border-width: 3px;
   border-color: darken(@postcolor, 30%);
 
-  margin: 1em;
+  margin: 1em 0;
   padding: 1em;
   border-radius: .5em;
   background-color: @postcolor;
 
-  box-shadow: .25em .25em .4em 0 rgba(20,20,0,0.5);
+  box-shadow: .2em .2em .4em 0 rgba(20,20,0,0.2);
 
   &:nth-of-type(1) {
     margin-top: 1em;

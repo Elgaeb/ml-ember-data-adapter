@@ -10,10 +10,7 @@
     };
 
     function RouterFactory(endpoint) {
-        var route = function(fn) {
-            route.subrouteBuilders.push(fn);
-        };
-        route.__proto__ = Router;
+        var route = Object.create(Router);
         route.endpoint = endpoint;
         route.rule = Router.and.apply(route, Array.prototype.slice.call(arguments, 1));
         route.subroutes = [];
@@ -64,6 +61,10 @@
             return null;
         },
 
+        configure: function(fn) {
+            this.subrouteBuilders.push(fn);
+            return this;
+        },
         route: function(endpoint) {
             var router = RouterFactory.apply(RouterFactory, arguments);
             this.subroutes.push(router);
