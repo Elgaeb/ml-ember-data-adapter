@@ -19,7 +19,7 @@ declare function local:get-all($type-plural as xs:string) {
     }
 };
 
-let $request := $requests:options/rest:request[@endpoint="/xquery/smoulder/get-all.xqy"][1]
+let $request := $requests:options/rest:request[@endpoint="/xquery/smoulder/find.xqy"][1]
 let $map := rest:process-request($request)
 let $type-plural := map:get($map, "type")
 

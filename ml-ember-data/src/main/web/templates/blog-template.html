@@ -6,6 +6,26 @@
 
     <h2>Current Posts</h2>
 
+    <div class="row">
+        <form class="form-horizontal">
+            <div class="col-lg-12">
+                <div class="input-group">
+                    {{input
+                        class="form-control"
+                        type="text"
+                        id="search-post"
+                        placeholder="Search for..."
+                        value=searchQuery
+                        action="searchPosts"
+                    }}
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" {{action "searchPosts"}}><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+
     {{#each post in model itemController="postEdit"}}
     <div class="blog-post">
         <div class="blog-post-subject">{{#link-to 'post.edit' post}}{{post.subject}}{{/link-to}}</div>

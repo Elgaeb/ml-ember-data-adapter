@@ -20,7 +20,7 @@ declare variable $requests:options as element(rest:options) :=
             <http method="GET"/>
         </request>
 
-        <request uri="{$regex-no-id}" endpoint="/xquery/smoulder/get-all.xqy">
+        <request uri="{$regex-no-id}" endpoint="/xquery/smoulder/find.xqy" user-params="allow">
             <uri-param name="type">$1</uri-param>
             <http method="GET"/>
         </request>

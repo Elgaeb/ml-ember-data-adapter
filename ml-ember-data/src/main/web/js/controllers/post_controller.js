@@ -1,10 +1,19 @@
 (function() {
     "use strict";
 
+    Smoulder.ApplicationController = Ember.ObjectController.extend({
+        init: function() {
+            window.store = this.store;
+        }
+    });
+
     Smoulder.PostsController = Ember.ArrayController.extend({
         actions: {
             createNewPost: function() {
                 this.transitionToRoute('post.create');
+            },
+            searchPosts: function() {
+                console.log("search", this.get('searchQuery'))
             }
         }
     });
